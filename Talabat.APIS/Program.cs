@@ -6,7 +6,7 @@ namespace Talabat.APIS
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +27,30 @@ namespace Talabat.APIS
             var app = builder.Build();
 
 
+
+            #region Creating  An service through this object of Iserviceprovider
+
+            using var scope = app.Services.CreateScope(); //Creating Scope
+
+            var service = scope.ServiceProvider; // can provide any service through this object of Iserviceprovider
+
+
+            var _dbcontext = service.GetRequiredService<StoreContext>();
+            var loggerfactory = service.GetRequiredService<ILoggerFactory>();
+
+            try
+            {
+                await _dbcontext.Database.MigrateAsync();
+            }
+            catch (Exception ex)
+            {
+
+                var logger = loggerfactory.CreateLogger<Program>();
+
+                logger.LogError(ex, "An Error Occured");
+            }
+
+            #endregion
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
