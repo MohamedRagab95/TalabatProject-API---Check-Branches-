@@ -44,7 +44,7 @@ namespace Talabat.Repository.Data
         }
 
 
-
+ 
         public async Task<IEnumerable<T>> GetAllWithSpecsAsync(ISpecification<T> specs)
         {
             return await SpecificationEvaluater<T>.GetQuery(_storeContext.Set<T>(), specs).ToListAsync();
