@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using Talabat.APIS.Errors;
 using Talabat.APIS.Helpers;
+using Talabat.APIS.MiddleWares;
 using Talabat.Core.Repository.Contract;
 using Talabat.Repository.Data;
 using Talabat.Repository.Data.SeedingData;
@@ -35,32 +36,20 @@ namespace Talabat.APIS
             builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 
-            builder.Services.Configure<ApiBehaviorOptions>
-                (options=>
+            builder.Services.Configure<ApiBehaviorOptions>(options =>
 
-                  {    
-                       options.InvalidModelStateResponseFactory = (ActionContext) =>
-                       {
-                           var errors = ActionContext.ModelState.Where(p => p.Value.Errors.Count() > 0)
-                                                     .SelectMany(p => p.Value.Errors)
-                                                     .Select(e => e.ErrorMessage)
-                                                     .ToArray();
-                       
-                           var validationresponseerror = new ValidationResponseError()
-                           {
-                               Errors = errors
-                           };
-                       
-                           return new BadRequestObjectResult(validationresponseerror);
-                       
-                       };
-                  }    
-                 );
+                options.InvalidModelStateResponseFactory = (ActionContext) =>
+                {
+                   var errors= ActionContext.ModelState.Where(p=>p.Value.Errors.Count()>0).
+                                            SelectMany(p=>p.Value.Errors).
+                                            Select(e=>e.ErrorMessage).ToList();
 
+                    var validation = new ValidationResponseError() { Errors = errors };
 
+                    return new BadRequestObjectResult(validation);
+                }
 
-
-
+            );
 
 
             var app = builder.Build();
@@ -68,6 +57,7 @@ namespace Talabat.APIS
 
 
             #region Creating  An service through this object of Iserviceprovider
+
 
             using var scope = app.Services.CreateScope(); //Creating Scope
 
@@ -93,6 +83,11 @@ namespace Talabat.APIS
             #endregion
 
             // Configure the HTTP request pipeline.
+
+            app.UseMiddleware<ServerErrorHandlingMiddleWare>();
+
+
+
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
