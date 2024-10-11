@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Talabat.APIS.DTOs;
+using Talabat.APIS.Errors;
 using Talabat.Core.Entities;
 using Talabat.Core.Repository.Contract;
 using Talabat.Core.Specs.Contract.Products.Specifications;
@@ -34,13 +35,15 @@ namespace Talabat.APIS.Controllers
 
 
         [HttpGet("{id}")]
+        [ProducesResponseType(typeof(ProductDtO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponseError), StatusCodes.Status404NotFound)]
         public async Task<ActionResult<ProductDtO>> GetProduct(int id)
         {
             var obj = new ProductWithBrandAndCategorySpecs(id);
 
             var product = await _productRepo.GetWithSpecsAsync(obj);
             if (product == null)
-                return NotFound(new {Massage="Not Found" , StatusCode=404});
+                return NotFound(new ApiResponseError(400));
 
             return Ok(_mapper.Map<Product,ProductDtO>(product));
 
