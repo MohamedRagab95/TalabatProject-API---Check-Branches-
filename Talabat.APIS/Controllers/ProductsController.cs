@@ -13,11 +13,16 @@ namespace Talabat.APIS.Controllers
     public class ProductsController : BaseApiController
     {
         private readonly IGenericRepository<Product> _productRepo;
+        private readonly IGenericRepository<ProductCategory> _categoryRepo;
+        private readonly IGenericRepository<ProductBrand> _brandRepo;
         private readonly IMapper _mapper;
 
-        public ProductsController(IGenericRepository<Product> productRepo,IMapper mapper)
+        public ProductsController(IGenericRepository<Product> productRepo,
+            IGenericRepository<ProductCategory> categoryRepo, IGenericRepository<ProductBrand> brandRepo, IMapper mapper)
         {
             _productRepo = productRepo;
+            _categoryRepo = categoryRepo;
+            _brandRepo = brandRepo;
             _mapper = mapper;
         }
 
@@ -47,6 +52,24 @@ namespace Talabat.APIS.Controllers
 
             return Ok(_mapper.Map<Product,ProductDtO>(product));
 
+        }
+
+
+
+        [HttpGet("categories")]
+        public async Task<ActionResult<IEnumerable<ProductCategory>>> GetallCategory()
+        {
+            var categories = await _categoryRepo.GetAllAsync();
+
+            return Ok(categories);
+        }
+
+        [HttpGet("brands")]
+        public async Task<ActionResult<IEnumerable<ProductBrand>>> GetallBrands()
+        {
+            var brands = await _brandRepo.GetAllAsync();
+
+            return Ok(brands);
         }
 
         #region Static Query
