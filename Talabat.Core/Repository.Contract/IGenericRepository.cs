@@ -10,12 +10,12 @@ namespace Talabat.Core.Repository.Contract
 {
     public interface IGenericRepository<T> where T: BaseEntity
     {
-        Task<IEnumerable<T>> GetAllAsync();
+        Task<IReadOnlyList<T>> GetAllAsync();
 
         Task<T> GetAsync(int id);
 
 
-        Task<IEnumerable<T>> GetAllWithSpecsAsync(ISpecification<T> specs);
+        Task<IReadOnlyList<T>> GetAllWithSpecsAsync(ISpecification<T> specs);
 
         Task<T> GetWithSpecsAsync(ISpecification<T> specs);
 
