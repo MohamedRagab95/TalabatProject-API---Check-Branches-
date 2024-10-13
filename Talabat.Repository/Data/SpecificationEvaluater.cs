@@ -23,6 +23,22 @@ namespace Talabat.Repository.Data
             }
 
 
+            //sort asc
+            if (specs.OrderBy != null) 
+            {
+                query = query.OrderBy(specs.OrderBy);
+            
+            }
+
+            //sort desc
+            else if (specs.OrderByDesc != null)
+            { 
+                query = query.OrderByDescending(specs.OrderByDesc);
+            }
+
+
+
+
             query = specs.Includes.Aggregate(query, (CurrentQuery, IncludeExpression) => CurrentQuery.Include(IncludeExpression));
 
 
