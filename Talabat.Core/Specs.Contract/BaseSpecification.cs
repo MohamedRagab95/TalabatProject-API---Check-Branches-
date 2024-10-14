@@ -16,6 +16,11 @@ namespace Talabat.Repository.Data
         public Expression<Func<T, object>> OrderBy { get ; set; }
         public Expression<Func<T, object>> OrderByDesc { get ; set; }
 
+        public int Skip { get; set; }
+        public int Take { get; set; }
+
+        public bool IsAppliedPagination { get; set; } = false;
+
         public BaseSpecification(Expression<Func<T, bool>> _criteria)
         {
             Criteria= _criteria;
@@ -33,6 +38,13 @@ namespace Talabat.Repository.Data
         public void AddOrderByDesc(Expression<Func<T, object>> _orderByDesc)
         {
             OrderByDesc = _orderByDesc;
+        }
+
+        public void ApplyPagination (int skip ,int take)
+        {
+            IsAppliedPagination= true;
+            Skip= skip;
+            Take= take;
         }
 
     }

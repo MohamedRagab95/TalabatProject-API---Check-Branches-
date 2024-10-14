@@ -23,6 +23,10 @@ namespace Talabat.Repository.Data
             }
 
 
+         
+              
+           
+
             //sort asc
             if (specs.OrderBy != null) 
             {
@@ -36,7 +40,8 @@ namespace Talabat.Repository.Data
                 query = query.OrderByDescending(specs.OrderByDesc);
             }
 
-
+            if(specs.IsAppliedPagination)
+            query = query.Skip(specs.Skip).Take(specs.Take);
 
 
             query = specs.Includes.Aggregate(query, (CurrentQuery, IncludeExpression) => CurrentQuery.Include(IncludeExpression));
