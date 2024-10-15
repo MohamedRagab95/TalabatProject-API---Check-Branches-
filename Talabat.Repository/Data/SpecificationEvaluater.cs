@@ -23,25 +23,26 @@ namespace Talabat.Repository.Data
             }
 
 
-         
-              
-           
-
+            #region Sorting
             //sort asc
-            if (specs.OrderBy != null) 
+            if (specs.OrderBy != null)
             {
                 query = query.OrderBy(specs.OrderBy);
-            
+
             }
 
             //sort desc
             else if (specs.OrderByDesc != null)
-            { 
+            {
                 query = query.OrderByDescending(specs.OrderByDesc);
             }
+            #endregion
 
-            if(specs.IsAppliedPagination)
-            query = query.Skip(specs.Skip).Take(specs.Take);
+            #region EnablePagination
+
+            if (specs.IsAppliedPagination)
+                query = query.Skip(specs.Skip).Take(specs.Take); 
+            #endregion
 
 
             query = specs.Includes.Aggregate(query, (CurrentQuery, IncludeExpression) => CurrentQuery.Include(IncludeExpression));
