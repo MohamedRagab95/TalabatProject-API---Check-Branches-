@@ -44,6 +44,9 @@ namespace Talabat.APIS
                 
              );
 
+
+            builder.Services.AddScoped(typeof(IBasketRepository),typeof(BasketRepository));
+
             builder.Services.AddServicesExtensions();
 
             var app = builder.Build();

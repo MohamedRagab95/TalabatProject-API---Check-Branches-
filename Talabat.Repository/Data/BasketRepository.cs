@@ -11,7 +11,7 @@ using Talabat.Core.Repository.Contract;
 
 namespace Talabat.Repository.Data
 {
-    class BasketRepository : IBasketRepository
+    public class BasketRepository : IBasketRepository
     {
         private readonly IDatabase _database;
 
@@ -40,6 +40,9 @@ namespace Talabat.Repository.Data
             if(createdOrDeletedBasket ==false)
                 return null;
             else
+            {
+
+            }
             return await GetBasketAsync(basket.Id);
         }
        
