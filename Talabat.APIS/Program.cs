@@ -9,6 +9,7 @@ using Talabat.APIS.MiddleWares;
 using Talabat.APIS.ServicesExtensions;
 using Talabat.Core.Repository.Contract;
 using Talabat.Repository.Data;
+using Talabat.Repository.Data.IdentityDbContext;
 using Talabat.Repository.Data.SeedingData;
 
 namespace Talabat.APIS
@@ -32,6 +33,11 @@ namespace Talabat.APIS
 
                 );
 
+            builder.Services.AddDbContext<AppIdentityContext>
+              (
+                options => options.UseSqlServer(builder.Configuration.GetConnectionString("IdentityConnection"))
+
+              );
 
             builder.Services.AddSingleton<IConnectionMultiplexer>
              (o=>
@@ -62,11 +68,17 @@ namespace Talabat.APIS
 
 
             var _dbcontext = service.GetRequiredService<StoreContext>();
+            var _identitycontext= service.GetRequiredService<AppIdentityContext>();
+
+
             var loggerfactory = service.GetRequiredService<ILoggerFactory>();
 
             try
             {
                 await _dbcontext.Database.MigrateAsync();
+                await _identitycontext.Database.MigrateAsync();
+
+
                 await StoreContextSeed.SeedBrandsAsync(_dbcontext);
             }
             catch (Exception ex)
