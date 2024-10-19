@@ -1,4 +1,5 @@
 
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Diagnostics;
 using Microsoft.EntityFrameworkCore;
@@ -7,6 +8,7 @@ using Talabat.APIS.Errors;
 using Talabat.APIS.Helpers;
 using Talabat.APIS.MiddleWares;
 using Talabat.APIS.ServicesExtensions;
+using Talabat.Core.Entities.IdentityEntities;
 using Talabat.Core.Repository.Contract;
 using Talabat.Repository.Data;
 using Talabat.Repository.Data.IdentityDbContext;
@@ -51,6 +53,10 @@ namespace Talabat.APIS
              );
 
 
+
+            builder.Services.AddIdentity<AppUser,IdentityRole>().AddEntityFrameworkStores<AppIdentityContext>();
+
+
             builder.Services.AddScoped(typeof(IBasketRepository),typeof(BasketRepository));
 
             builder.Services.AddServicesExtensions();
@@ -68,8 +74,9 @@ namespace Talabat.APIS
 
 
             var _dbcontext = service.GetRequiredService<StoreContext>();
-            var _identitycontext= service.GetRequiredService<AppIdentityContext>();
 
+            var _identitycontext= service.GetRequiredService<AppIdentityContext>();
+            var _usermanager=service.GetRequiredService<UserManager<AppUser>>();
 
             var loggerfactory = service.GetRequiredService<ILoggerFactory>();
 
@@ -78,7 +85,7 @@ namespace Talabat.APIS
                 await _dbcontext.Database.MigrateAsync();
                 await _identitycontext.Database.MigrateAsync();
 
-
+                await UserSeeding.UserSeedAsync(_usermanager);
                 await StoreContextSeed.SeedBrandsAsync(_dbcontext);
             }
             catch (Exception ex)
