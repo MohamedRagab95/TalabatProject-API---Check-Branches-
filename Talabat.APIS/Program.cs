@@ -76,6 +76,7 @@ namespace Talabat.APIS
             var _dbcontext = service.GetRequiredService<StoreContext>();
 
             var _identitycontext= service.GetRequiredService<AppIdentityContext>();
+
             var _usermanager=service.GetRequiredService<UserManager<AppUser>>();
 
             var loggerfactory = service.GetRequiredService<ILoggerFactory>();
