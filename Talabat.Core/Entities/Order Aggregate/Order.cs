@@ -8,6 +8,19 @@ namespace Talabat.Core.Entities.Order_Aggregate
 {
     public class Order :BaseEntity
     {
+        public Order()
+        {
+        }
+
+        public Order(string buyerName, ShippingAddress shippingAddress, DeliveryMethod deliveryMethod, ICollection<OrderItem> items, decimal subTotal)
+        {
+            BuyerName = buyerName;
+            ShippingAddress = shippingAddress;
+            DeliveryMethod = deliveryMethod;
+            Items = items;
+            SubTotal = subTotal;
+        }
+
         public string BuyerName { get; set; }
 
         public DateTimeOffset OrderDate { get; set; } = DateTimeOffset.UtcNow;
@@ -18,7 +31,7 @@ namespace Talabat.Core.Entities.Order_Aggregate
 
         public DeliveryMethod DeliveryMethod { get; set; }   // 1-m httrmg 1-1 optional -madatory mesh m7tag fk hna
 
-        public ICollection<OrderItem> Items { get; set; } = new HashSet<OrderItem>;
+        public ICollection<OrderItem> Items { get; set; } = new HashSet<OrderItem>();
 
         public decimal SubTotal { get; set; }
         public decimal GetTotal()=> SubTotal+ DeliveryMethod.Cost;

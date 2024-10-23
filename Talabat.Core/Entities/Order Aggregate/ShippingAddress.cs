@@ -8,6 +8,18 @@ namespace Talabat.Core.Entities.Order_Aggregate
 {
     public class ShippingAddress
     {
+        public ShippingAddress()
+        {
+        }
+
+        public ShippingAddress(string firstName, string lastName, string street, string city, string counntry)
+        {
+            FirstName = firstName;
+            LastName = lastName;
+            Street = street;
+            City = city;
+            Counntry = counntry;
+        }
 
         public string FirstName { get; set; }
         public string LastName { get; set; }
