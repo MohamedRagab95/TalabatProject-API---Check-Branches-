@@ -6,6 +6,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Talabat.Core.Entities;
+using Talabat.Core.Entities.Order_Aggregate;
 
 namespace Talabat.Repository.Data.SeedingData
 {
@@ -76,7 +77,30 @@ namespace Talabat.Repository.Data.SeedingData
 
 
 
-        }
+
+
+            var seeddeliverymethods = File.ReadAllText("../Talabat.Repository/Data/SeedingData/delivery.json");
+
+            var methods = JsonSerializer.Deserialize<List<DeliveryMethod>>(seeddeliverymethods);
+
+            if (methods?.Count > 0)
+            {
+                if (_storeContext.DeliveryMethods.Count() == 0)
+                {
+
+                    foreach (var method in methods)
+                    {
+                        _storeContext.Set<DeliveryMethod>().Add(method);
+                    }
+
+                    await _storeContext.SaveChangesAsync();
+                }
+
+            }
+
+
+
+       }
 
 
 
